@@ -1,3 +1,6 @@
+"scripts": {
+  "start": "node index.js"
+}
 {
     "name": "my-bot",
     "version": "1.0.0",
@@ -6,7 +9,22 @@
         "start": "node index.js"
     },
     "dependencies": {
+        "body-parser": "^1.19.0",
         "express": "^4.17.1",
-        "body-parser": "^1.19.0"
-    }
+        "line-bot-sdk": "^0.1.4"
+    },
+    "description": "github json line bot",
+    "repository": {
+        "type": "git",
+        "url": "gitreplinebot"
+    },
+    "keywords": [
+        "line",
+        "bot",
+        "messaging",
+        "chatbot",
+        "line-bot"
+    ],
+    "author": "johntigers501",
+    "license": "ISC"
 }
