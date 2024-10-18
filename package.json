@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:johntigers501/gitreplinebot.git"
+    "url": "git@github.com:johntigers501/gitreprender.git"
   },
   "dependencies": {
     "@line/bot-sdk": "^7.4.0",
