@@ -6,7 +6,7 @@ const app = express();
 app.use(bodyParser.json());
 
 // ตั้งค่า endpoint สำหรับ webhook
-app.post('/webhook', server.handleWebhook);
+app.post('/webhook', server.handleWebhook); // ใช้ handleWebhook จาก server.js
 
 // หน้าแรก
 app.get('/', (req, res) => {
