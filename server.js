@@ -53,7 +53,7 @@ async function handleWebhook(req, res) {
             const userId = event.source.userId;
 
             if (sourceType === 'user') {
-                const profile = await lineClient.getProfile(userId);
+                const profile = await lineClient.getProfile(userId); // ใช้ lineClient
                 const userName = profile.displayName;
 
                 const replyMessage = {
@@ -65,7 +65,7 @@ async function handleWebhook(req, res) {
 
             } else if (sourceType === 'group') {
                 const groupId = event.source.groupId;
-                const profile = await lineClient.getProfile(userId);
+                const profile = await lineClient.getProfile(userId); // ใช้ lineClient
                 const userName = profile.displayName;
 
                 const replyMessage = {
