@@ -1,4 +1,5 @@
 const line = require('@line/bot-sdk');
+const moment = require('moment-timezone');
 
 const config = {
     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
@@ -6,6 +7,7 @@ const config = {
 };
 const client = new line.Client(config);
 
+// ฟังก์ชันจัดการ Webhook สำหรับ Line Bot
 function handleWebhook(req, res) {
     const events = req.body.events;
 
@@ -48,38 +50,9 @@ function handleWebhook(req, res) {
             const userId = event.source.userId;
 
             if (sourceType === 'user') {
-                client.getProfile(userId)
-                    .then((profile) => {
-                        const userName = profile.displayName;
-                        const replyMessage = {
-                            type: 'text',
-                            text: `You said: ${message}\nจาก: ${userName}`
-                        };
-                        return client.replyMessage(replyToken, replyMessage);
-                    })
-                    .then(() => {
-                        console.log('Message replied in 1:1 chat');
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                    });
+                handleUserMessage(replyToken, message, userId);
             } else if (sourceType === 'group') {
-                const groupId = event.source.groupId;
-                client.getProfile(userId)
-                    .then((profile) => {
-                        const userName = profile.displayName;
-                        const replyMessage = {
-                            type: 'text',
-                            text: `You said: ${message}\nจาก: ${userName} ในกลุ่ม: ${groupId}`
-                        };
-                        return client.replyMessage(replyToken, replyMessage);
-                    })
-                    .then(() => {
-                        console.log('Message replied in group');
-                    })
-                    .catch((err) => {
-                        console.error(err);
-                    });
+                handleGroupMessage(replyToken, message, userId, event.source.groupId);
             }
         }
     });
@@ -87,6 +60,87 @@ function handleWebhook(req, res) {
     res.status(200).end();
 }
 
+// ฟังก์ชันสำหรับจัดการข้อความจากผู้ใช้
+function handleUserMessage(replyToken, message, userId) {
+    client.getProfile(userId)
+        .then((profile) => {
+            const userName = profile.displayName;
+            const replyMessage = {
+                type: 'text',
+                text: `คุณพูดว่า: ${message}\nจาก: ${userName}`
+            };
+            return client.replyMessage(replyToken, replyMessage);
+        })
+        .then(() => {
+            console.log('Message replied in 1:1 chat');
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+}
+
+// ฟังก์ชันสำหรับจัดการข้อความในกลุ่ม
+function handleGroupMessage(replyToken, message, userId, groupId) {
+    client.getProfile(userId)
+        .then((profile) => {
+            const userName = profile.displayName;
+            const replyMessage = {
+                type: 'text',
+                text: `คุณพูดว่า: ${message}\nจาก: ${userName} ในกลุ่ม: ${groupId}`
+            };
+            return client.replyMessage(replyToken, replyMessage);
+        })
+        .then(() => {
+            console.log('Message replied in group');
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+}
+
+// ฟังก์ชันสำหรับจัดการ Webhook สำหรับ Dialogflow
+function handleDialogflowWebhook(req, res) {
+    const city = req.body.queryResult.parameters['location']; // ดึงชื่อเมืองจากพารามิเตอร์
+
+    // ใช้ moment-timezone ในการดึงเวลาจริงตามเมืองที่ระบุ
+    const currentTime = moment().tz(city).format('HH:mm');
+
+    let responseText = `เวลาปัจจุบันใน ${city} คือ ${currentTime}.`;
+
+    return res.json({
+        fulfillmentText: responseText,  // ส่งเวลาจริงกลับไปที่ Dialogflow
+    });
+}
+
+// ส่งข้อความตอบกลับไปที่ Line
+function replyMessage(replyToken, message) {
+    const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message/reply';
+
+    request.post({
+        url: LINE_MESSAGING_API,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.CHANNEL_ACCESS_TOKEN}` // ใส่ Access Token ของคุณ
+        },
+        body: JSON.stringify({
+            replyToken: replyToken,
+            messages: [
+                {
+                    type: 'text',
+                    text: message
+                }
+            ]
+        })
+    }, (error, response, body) => {
+        if (error) {
+            console.error('Error sending message:', error);
+        } else {
+            console.log('Message sent:', body);
+        }
+    });
+}
+
 module.exports = {
-    handleWebhook
+    handleWebhook,
+    handleDialogflowWebhook
 };
