@@ -16,7 +16,7 @@ const auth = new GoogleAuth({
     scopes: 'https://www.googleapis.com/auth/cloud-platform',
 });
 const sessionClient = new SessionsClient({
-    keyFilename: './dlfmessmnage-lg9r-e1196464a94a.json' // สร้าง client ด้วย Service Account
+    keyFilename: './config/dlfmessmnage-lg9r-e1196464a94a.json' // สร้าง client ด้วย Service Account
 });
 
 const app = express();
