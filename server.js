@@ -6,10 +6,11 @@ const config = {
     channelSecret: process.env.CHANNEL_SECRET
 };
 
-const client = new line.Client(config);
-const projectId = 'dlfmessmnage-lg9r'; // ใส่ชื่อโปรเจ็กต์ที่คุณสร้างใน Google Cloud
+// สร้าง client สำหรับ LINE
+const lineClient = new line.Client(config);
+const projectId = 'dlfmessmnage-lg9r'; // ใส่ชื่อโปรเจ็กต์ projectId ที่คุณสร้างใน Google Cloud
 const sessionClient = new SessionsClient({
-    keyFilename: './service-account-file.json' // เปลี่ยนชื่อไฟล์ให้ตรงกับชื่อไฟล์ที่ดาวน์โหลด
+    keyFilename: './service-account-file.json' // // สร้าง client ด้วย Service Account
 });
 
 async function handleWebhook(req, res) {
