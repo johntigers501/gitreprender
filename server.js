@@ -1,18 +1,27 @@
+const express = require('express'); // หากใช้ Express
 const line = require('@line/bot-sdk');
 const { SessionsClient } = require('@google-cloud/dialogflow'); // นำเข้า Dialogflow client
 
 const config = {
     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
-    channelSecret: process.env.CHANNEL_SECRET
+    channelSecret: process.env.CHANNEL_SECRET,
 };
 
 // สร้าง client สำหรับ LINE
 const lineClient = new line.Client(config);
-const projectId = 'dlfmessmnage-lg9r'; // ใส่ชื่อโปรเจ็กต์ projectId ที่คุณสร้างใน Google Cloud
+const projectId = 'dlfmessmnage-lg9r'; // ใส่ชื่อโปรเจ็กต์ที่คุณสร้างใน Google Cloud
 const sessionClient = new SessionsClient({
-    keyFilename: './service-account-file.json' // // สร้าง client ด้วย Service Account
+    keyFilename: './service-account-file.json' // สร้าง client ด้วย Service Account
 });
 
+const app = express();
+const port = process.env.PORT || 3000;
+
+// Middleware เพื่อรับข้อมูลจาก LINE webhook
+app.use(line.middleware(config));
+app.post('/webhook', handleWebhook);
+
+// ฟังก์ชันจัดการ webhook
 async function handleWebhook(req, res) {
     const events = req.body.events;
 
@@ -23,7 +32,7 @@ async function handleWebhook(req, res) {
                 type: 'text',
                 text: 'ยินดีต้อนรับ! ขอบคุณที่เพิ่มฉันเป็นเพื่อน'
             };
-            await client.replyMessage(event.replyToken, welcomeMessage);
+            await lineClient.replyMessage(event.replyToken, welcomeMessage);
             console.log('Sent welcome message to new friend');
 
         } else if (event.type === 'join') {
@@ -31,7 +40,7 @@ async function handleWebhook(req, res) {
                 type: 'text',
                 text: 'สวัสดีทุกคน! ฉันได้เข้าร่วมกลุ่มนี้แล้ว!'
             };
-            await client.replyMessage(event.replyToken, joinMessage);
+            await lineClient.replyMessage(event.replyToken, joinMessage);
             console.log('Sent join message in group');
 
         } else if (event.type === 'leave') {
@@ -44,26 +53,26 @@ async function handleWebhook(req, res) {
             const userId = event.source.userId;
 
             if (sourceType === 'user') {
-                const profile = await client.getProfile(userId);
+                const profile = await lineClient.getProfile(userId);
                 const userName = profile.displayName;
 
                 const replyMessage = {
                     type: 'text',
                     text: `You said: ${message}\nจาก: ${userName}`
                 };
-                await client.replyMessage(replyToken, replyMessage);
+                await lineClient.replyMessage(replyToken, replyMessage);
                 console.log('Message replied in 1:1 chat');
 
             } else if (sourceType === 'group') {
                 const groupId = event.source.groupId;
-                const profile = await client.getProfile(userId);
+                const profile = await lineClient.getProfile(userId);
                 const userName = profile.displayName;
 
                 const replyMessage = {
                     type: 'text',
                     text: `You said: ${message}\nจาก: ${userName} ในกลุ่ม: ${groupId}`
                 };
-                await client.replyMessage(replyToken, replyMessage);
+                await lineClient.replyMessage(replyToken, replyMessage);
                 console.log('Message replied in group');
             }
 
@@ -86,7 +95,7 @@ async function handleWebhook(req, res) {
                     type: 'text',
                     text: result.fulfillmentText,
                 };
-                await client.replyMessage(replyToken, replyMessageFromDialogflow);
+                await lineClient.replyMessage(replyToken, replyMessageFromDialogflow);
                 console.log('Message replied from Dialogflow');
             } catch (error) {
                 console.error('Error detecting intent:', error);
@@ -97,6 +106,7 @@ async function handleWebhook(req, res) {
     res.status(200).end();
 }
 
-module.exports = {
-    handleWebhook
-};
+// เริ่มเซิร์ฟเวอร์
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
