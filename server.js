@@ -1,5 +1,5 @@
 const line = require('@line/bot-sdk');
-const { SessionsClient } = require('@google-cloud/dlfmessmnage-lg9r'); // นำเข้า Dialogflow client
+const { SessionsClient } = require('@google-cloud/dlfmessmnage'); // นำเข้า Dialogflow client
 
 const config = {
     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
