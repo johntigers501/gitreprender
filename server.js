@@ -7,9 +7,9 @@ const config = {
 };
 
 const client = new line.Client(config);
-const projectId = 'YOUR_PROJECT_ID'; // ใส่ชื่อโปรเจ็กต์ที่คุณสร้างใน Google Cloud
+const projectId = 'dlfmessmnage'; // ใส่ชื่อโปรเจ็กต์ที่คุณสร้างใน Google Cloud
 const sessionClient = new SessionsClient({
-    keyFilename: 'path/to/your/service-account-file.json' // ใส่เส้นทางไฟล์ JSON ของ Service Account
+    keyFilename: './service-account-file.json' // เปลี่ยนชื่อไฟล์ให้ตรงกับชื่อไฟล์ที่ดาวน์โหลด
 });
 
 async function handleWebhook(req, res) {
