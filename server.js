@@ -3,6 +3,14 @@ const line = require('@line/bot-sdk');
 const { SessionsClient } = require('@google-cloud/dialogflow'); // นำเข้า Dialogflow client
 const { GoogleAuth } = require('google-auth-library'); // เพิ่มการนำเข้า GoogleAuth
 
+// กำหนดเส้นทางไฟล์ Service Account JSON
+process.env.GOOGLE_APPLICATION_CREDENTIALS = 'D:/botdialogflow/projectdialog-439220-c9a0b872d7df.json'; // แทนที่เส้นทางให้ถูกต้อง
+
+// ตั้งค่าข้อมูลโปรเจ็กต์
+const projectId = 'projectdialog-439220'; // ใส่ชื่อโปรเจ็กต์ที่คุณสร้างใน Google Cloud
+const sessionId = '123456'; // สร้าง sessionId เอง
+const languageCode = 'en'; // เปลี่ยนเป็นภาษาที่คุณต้องการ
+
 const config = {
     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
     channelSecret: process.env.CHANNEL_SECRET,
@@ -10,14 +18,9 @@ const config = {
 
 // สร้าง client สำหรับ LINE
 const lineClient = new line.Client(config);
-const projectId = 'projectdialog-439220'; // ใส่ชื่อโปรเจ็กต์ที่คุณสร้างใน Google Cloud
-const auth = new GoogleAuth({
-    keyFilename: './config/projectdialog-439220-c9a0b872d7df.json', // เส้นทางไปยังไฟล์ JSON
-    scopes: 'https://www.googleapis.com/auth/cloud-platform',
-});
-const sessionClient = new SessionsClient({
-    keyFilename: './config/projectdialog-439220-c9a0b872d7df.json' // สร้าง client ด้วย Service Account
-});
+
+// สร้าง Dialogflow client
+const sessionClient = new SessionsClient(); // ไม่ต้องระบุ keyFilename ที่นี่เนื่องจากใช้ GOOGLE_APPLICATION_CREDENTIALS
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -88,7 +91,7 @@ async function handleWebhook(req, res) {
                 queryInput: {
                     text: {
                         text: message,
-                        languageCode: 'th', // เปลี่ยนเป็นภาษาไทยหรือภาษาที่คุณต้องการ
+                        languageCode: languageCode, // ใช้ languageCode ที่กำหนด
                     },
                 },
             };
