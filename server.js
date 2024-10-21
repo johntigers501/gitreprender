@@ -9,7 +9,7 @@ process.env.GOOGLE_APPLICATION_CREDENTIALS = 'projectdialog-439220-c9a0b872d7df.
 // ตั้งค่าข้อมูลโปรเจ็กต์
 const projectId = 'projectdialog-439220'; // ใส่ชื่อโปรเจ็กต์ที่คุณสร้างใน Google Cloud
 const sessionId = '123456'; // สร้าง sessionId เอง
-const languageCode = 'en'; // เปลี่ยนเป็นภาษาที่คุณต้องการ
+const languageCode = 'th'; // เปลี่ยนเป็นภาษาที่คุณต้องการ
 
 const config = {
     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
