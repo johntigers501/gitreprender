@@ -10,6 +10,7 @@ const config = {
 
 // สร้าง client สำหรับ LINE
 const lineClient = new line.Client(config);
+<<<<<<< HEAD
 const projectId = 'projectdialog-439220'; // ใส่ชื่อโปรเจ็กต์ที่คุณสร้างใน Google Cloud
 const auth = new GoogleAuth({
     keyFilename: './config/projectdialog-439220-c9a0b872d7df.json', // เส้นทางไปยังไฟล์ JSON
@@ -17,6 +18,15 @@ const auth = new GoogleAuth({
 });
 const sessionClient = new SessionsClient({
     keyFilename: './config/projectdialog-439220-c9a0b872d7df.json' // สร้าง client ด้วย Service Account
+=======
+const projectId = 'dlfmessmnage-lg9r'; // ใส่ชื่อโปรเจ็กต์ที่คุณสร้างใน Google Cloud
+const auth = new GoogleAuth({
+    keyFilename: './dlfmessmnage-lg9r-e1196464a94a.json', // เส้นทางไปยังไฟล์ JSON
+    scopes: 'https://www.googleapis.com/auth/cloud-platform',
+});
+const sessionClient = new SessionsClient({
+    keyFilename: './config/dlfmessmnage-lg9r-e1196464a94a.json' // สร้าง client ด้วย Service Account
+>>>>>>> e2e073bce13326ed695b7f55f2fef81ff443d9a1
 });
 
 const app = express();
@@ -114,4 +124,8 @@ async function handleWebhook(req, res) {
 // ส่งออกฟังก์ชัน handleWebhook
 module.exports = {
     handleWebhook
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> e2e073bce13326ed695b7f55f2fef81ff443d9a1
