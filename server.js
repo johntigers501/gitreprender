@@ -1,6 +1,7 @@
 const line = require('@line/bot-sdk');
 const moment = require('moment-timezone');
 require('dotenv').config();
+
 const config = {
     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
     channelSecret: process.env.CHANNEL_SECRET
@@ -40,13 +41,26 @@ function handleWebhook(req, res) {
                     console.error(err);
                 });
 
+            // Send "Welcome to Line Bot." message when the bot joins a group
+            const welcomeToBotMessage = {
+                type: 'text',
+                text: 'Welcome to Line Bot.'
+            };
+            client.replyMessage(event.replyToken, welcomeToBotMessage)
+                .then(() => {
+                    console.log('Sent welcome message after joining group');
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+
         } else if (event.type === 'leave') {
             console.log(`Bot left group: ${event.source.groupId}`);
 
         } else if (event.type === 'message' && event.message.type === 'text') {
             const replyToken = event.replyToken;
             const message = event.message.text;
-            const sourceType = event.source.type; // user หรือ group
+            const sourceType = event.source.type; // user or group
             const userId = event.source.userId;
 
             if (sourceType === 'user') {
