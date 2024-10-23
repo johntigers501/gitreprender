@@ -15,9 +15,9 @@
     "dialogflow": "^4.0.3",
     "express": "^4.21.1"
   },
-  "devDependencies": {},
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "devDependencies": {},
   "description": ""
 }
