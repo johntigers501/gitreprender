@@ -1,0 +1,23 @@
+{
+  "name": "my-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=20.15.1"
+  },
+  "dependencies": {
+    "@google-cloud/dialogflow": "^6.10.0",
+    "@line/bot-sdk": "^7.0.0",
+    "body-parser": "^1.20.3",
+    "dialogflow": "^4.0.3",
+    "express": "^4.21.1"
+  },
+  "devDependencies": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
