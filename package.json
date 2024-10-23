@@ -13,11 +13,12 @@
     "@line/bot-sdk": "^7.0.0",
     "body-parser": "^1.20.3",
     "dialogflow": "^4.0.3",
-    "express": "^4.21.1"
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "moment-timezone": "^0.5.46"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {},
   "description": ""
 }
