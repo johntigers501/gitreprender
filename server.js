@@ -4,40 +4,51 @@ require('dotenv').config();
 
 const config = {
     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
-    channelSecret: process.env.CHANNEL_SECRET,
+    channelSecret: process.env.CHANNEL_SECRET
 };
-
 const client = new line.Client(config);
 
-// Function to send a welcome message to a user
-function sendWelcomeMessage(userId) {
+// ฟังก์ชันส่งข้อความต้อนรับเมื่อรันเซิร์ฟเวอร์
+function sendWelcomeBroadcast() {
     const welcomeMessage = {
         type: 'text',
-        text: 'Welcome to Line Bot.', // Welcome message text
+        text: 'Welcome to Line Bot.'
     };
 
-    client.pushMessage(userId, welcomeMessage)
+    // ส่งข้อความ broadcast ไปยังผู้ใช้ทั้งหมด
+    client.broadcast(welcomeMessage)
         .then(() => {
-            console.log('Sent welcome message to user:', userId);
+            console.log('Sent welcome message to all users.');
         })
         .catch((err) => {
-            console.error('Error sending welcome message:', err.response ? err.response.data : err);
+            console.error('Error sending welcome broadcast:', err.response ? err.response.data : err);
         });
 }
 
-// Webhook function to handle incoming events
+// ฟังก์ชันจัดการ Webhook สำหรับ Line Bot
 function handleWebhook(req, res) {
     const events = req.body.events;
 
     events.forEach((event) => {
         if (event.type === 'follow') {
             const userId = event.source.userId;
-            sendWelcomeMessage(userId); // Send welcome message when followed
+            const welcomeMessage = {
+                type: 'text',
+                text: 'ยินดีต้อนรับ! ขอบคุณที่เพิ่มฉันเป็นเพื่อน'
+            };
+            client.replyMessage(event.replyToken, welcomeMessage)
+                .then(() => {
+                    console.log('Sent welcome message to new friend');
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+
         } else if (event.type === 'join') {
             const groupId = event.source.groupId;
             const joinMessage = {
                 type: 'text',
-                text: 'Hello everyone! I have joined this group!',
+                text: 'สวัสดีทุกคน! ฉันได้เข้าร่วมกลุ่มนี้แล้ว!'
             };
             client.replyMessage(event.replyToken, joinMessage)
                 .then(() => {
@@ -46,12 +57,14 @@ function handleWebhook(req, res) {
                 .catch((err) => {
                     console.error(err);
                 });
+
         } else if (event.type === 'leave') {
             console.log(`Bot left group: ${event.source.groupId}`);
+
         } else if (event.type === 'message' && event.message.type === 'text') {
             const replyToken = event.replyToken;
             const message = event.message.text;
-            const sourceType = event.source.type; // user or group
+            const sourceType = event.source.type; // user หรือ group
             const userId = event.source.userId;
 
             if (sourceType === 'user') {
@@ -65,14 +78,14 @@ function handleWebhook(req, res) {
     res.status(200).end();
 }
 
-// Function to handle messages from users
+// ฟังก์ชันสำหรับจัดการข้อความจากผู้ใช้
 function handleUserMessage(replyToken, message, userId) {
     client.getProfile(userId)
         .then((profile) => {
             const userName = profile.displayName;
             const replyMessage = {
                 type: 'text',
-                text: `You said: ${message}\nFrom: ${userName}`,
+                text: `คุณพูดว่า: ${message}\nจาก: ${userName}`
             };
             return client.replyMessage(replyToken, replyMessage);
         })
@@ -84,14 +97,14 @@ function handleUserMessage(replyToken, message, userId) {
         });
 }
 
-// Function to handle messages in groups
+// ฟังก์ชันสำหรับจัดการข้อความในกลุ่ม
 function handleGroupMessage(replyToken, message, userId, groupId) {
     client.getProfile(userId)
         .then((profile) => {
             const userName = profile.displayName;
             const replyMessage = {
                 type: 'text',
-                text: `You said: ${message}\nFrom: ${userName} in group: ${groupId}`,
+                text: `คุณพูดว่า: ${message}\nจาก: ${userName} ในกลุ่ม: ${groupId}`
             };
             return client.replyMessage(replyToken, replyMessage);
         })
@@ -103,22 +116,22 @@ function handleGroupMessage(replyToken, message, userId, groupId) {
         });
 }
 
-// Function to handle Dialogflow webhook (if applicable)
+// ฟังก์ชันสำหรับจัดการ Webhook สำหรับ Dialogflow
 function handleDialogflowWebhook(req, res) {
-    const city = req.body.queryResult.parameters['location']; // Extract city name from parameters
+    const city = req.body.queryResult.parameters['location']; // ดึงชื่อเมืองจากพารามิเตอร์
 
-    // Use moment-timezone to get current time for specified city
+    // ใช้ moment-timezone ในการดึงเวลาจริงตามเมืองที่ระบุ
     const currentTime = moment().tz(city).format('HH:mm');
 
-    let responseText = `The current time in ${city} is ${currentTime}.`;
+    let responseText = `เวลาปัจจุบันใน ${city} คือ ${currentTime}.`;
 
     return res.json({
-        fulfillmentText: responseText,  // Send current time back to Dialogflow
+        fulfillmentText: responseText,  // ส่งเวลาจริงกลับไปที่ Dialogflow
     });
 }
 
-// Export functions to be used in index.js
 module.exports = {
     handleWebhook,
     handleDialogflowWebhook,
+    sendWelcomeBroadcast // ส่งออกฟังก์ชันนี้เพื่อนำไปใช้ใน index.js
 };

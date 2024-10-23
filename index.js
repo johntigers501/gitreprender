@@ -1,18 +1,20 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const server = require('./server'); // Import server.js
+const server = require('./server'); // เรียกใช้ไฟล์ server.js
 
 const app = express();
-app.use(bodyParser.json()); // Parse JSON body
+app.use(bodyParser.json());
 
-// Endpoint for LINE Bot webhook
+// ตั้งค่า endpoint สำหรับ webhook ของ Line Bot
 app.post('/line-webhook', server.handleWebhook);
 
-// Endpoint for Dialogflow webhook (if applicable)
+// ตั้งค่า endpoint สำหรับ webhook ของ Dialogflow
 app.post('/dialogflow-webhook', server.handleDialogflowWebhook);
 
-// Start server
+// เริ่มต้นเซิร์ฟเวอร์
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
+    // เรียกใช้ฟังก์ชันส่งข้อความต้อนรับเมื่อรันเซิร์ฟเวอร์เสร็จ
+    server.sendWelcomeBroadcast();
 });
