@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const server = require('./server'); // เรียกใช้ไฟล์ server.js
+const dialogflow = require('./dialogflow'); // เรียกใช้ไฟล์ dialogflow.js
 
 const app = express();
 app.use(bodyParser.json());
@@ -9,7 +10,7 @@ app.use(bodyParser.json());
 app.post('/line-webhook', server.handleWebhook);
 
 // ตั้งค่า endpoint สำหรับ webhook ของ Dialogflow
-app.post('/dialogflow-webhook', server.handleDialogflowWebhook);
+app.post('/dialogflow-webhook', dialogflow.handleDialogflowWebhook);
 
 // เริ่มต้นเซิร์ฟเวอร์
 const port = process.env.PORT || 3000;
