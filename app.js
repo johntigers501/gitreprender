@@ -6,8 +6,10 @@ const app = express();
 app.use(bodyParser.json());
 
 const config = {
-    channelAccessToken: '7JUZAUikpVsD7pQZQfT/4isJaRcWYo3kr6aVATiPuoc8NQvF4wHaBLVWrswTViA6m4g0HmTo4oSXYHLxGMCQC8gaisKzQNyCHsH6mZkhD5/NMrKcBKKqJ+fgYWToNTFFpfZMf3NGlWs16mbFqDKoAdB04t89/1O/w1cDnyilFU=',
-    channelSecret: 'f184806624dbdcbf79f775061ed96d7f',
+//    channelAccessToken: 'd7JUZAUikpVsD7pQZQfT/4isJaRcWYo3kr6aVATiPuoc8NQvF4wHaBLVWrswTViA6m4g0HmTo4oSXYHLxGMCQC8gaisKzQNyCHsH6mZkhD5/NMrKcBKKqJ+fgYWToNTFFpfZMf3NGlWs16mbFqDKoAdB04t89/1O/w1cDnyilFU=',
+//    channelSecret: 'f184806624dbdcbnof79f775061ed96d7f',
+    channelAccessToken: 'vKFdF3TmadnJMuZ2huPUGbfj0v4nqIgtGzoelqRsRi18WOvievgmR1P47zCwmUrMFhTAh+tpV5cbsz9bGXQpGI8nww/vpkNvZ/ZWGzaO8+eVB8P1iwzSIDPjpzeyui17X4l3JPdef89duvw6nPNcdgdB04t89/1O/w1cDnyilFU=',
+    channelSecret: '2d4b2a39513b83675b3e999b6e1254d3',
 };
 
 const client = new Client(config);

@@ -1,29 +1,23 @@
 {
   "name": "my-bot",
   "version": "1.0.0",
-  "description": "A simple LINE bot webhook server",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/johntigers501/gitreprender.git"
-  },
-  "dependencies": {
-    "@line/bot-sdk": "^7.4.0",
-    "body-parser": "^1.20.2",
-    "express": "^4.18.2"
-  },
   "engines": {
     "node": ">=20.15.1"
   },
-  "author": "Johntigers501",
-  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/dialogflow": "^6.10.0",
+    "@line/bot-sdk": "^7.0.0",
+    "body-parser": "^1.20.3",
+    "dialogflow": "^4.0.3",
+    "express": "^4.21.1"
+  },
   "devDependencies": {},
   "keywords": [],
-  "bugs": {
-    "url": "https://github.com/johntigers501/gitreprender/issues"
-  },
-  "homepage": "https://github.com/johntigers501/gitreprender#readme"
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }
