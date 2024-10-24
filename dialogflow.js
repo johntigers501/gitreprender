@@ -23,11 +23,18 @@ function handleDialogflowWebhook(req, res) {
 
 // ฟังก์ชันคำนวณ quantity
 function calculateQuantity(date) {
-    // เพิ่ม logic ที่นี่เพื่อตรวจสอบและคำนวณจำนวนตามวัน
-    // นี่คือตัวอย่างง่ายๆ สำหรับการคำนวณ
-    const quantity = date * 10; // ตัวอย่างการคำนวณ
+    // ตรวจสอบว่าค่าของ date ที่รับมามีรูปแบบที่ถูกต้อง
+    const parsedDate = moment(date, 'YYYY-MM-DD');
+
+    if (!parsedDate.isValid()) {
+        return "ไม่พบข้อมูลวันที่ที่ถูกต้อง";
+    }
+
+    // ตัวอย่างการคำนวณ quantity จากวันที่ (เช่นเอาวันที่หารเพื่อดูจำนวน)
+    const quantity = parsedDate.date() * 10; // ใช้วันที่ (day of month) ในการคำนวณ
     return quantity;
 }
+
 
 module.exports = {
     handleDialogflowWebhook
