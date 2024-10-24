@@ -1,28 +1,11 @@
 const line = require('@line/bot-sdk');
+const moment = require('moment-timezone');
 require('dotenv').config();
-
 const config = {
     channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
     channelSecret: process.env.CHANNEL_SECRET
 };
 const client = new line.Client(config);
-
-// ฟังก์ชันส่งข้อความต้อนรับเมื่อรันเซิร์ฟเวอร์
-function sendWelcomeBroadcast() {
-    const welcomeMessage = {
-        type: 'text',
-        text: 'Welcome to Line Bot. by Render'
-    };
-
-    // ส่งข้อความ broadcast ไปยังผู้ใช้ทั้งหมด
-    client.broadcast(welcomeMessage)
-        .then(() => {
-            console.log('Sent welcome message to all users.');
-        })
-        .catch((err) => {
-            console.error('Error sending welcome broadcast:', err.response ? err.response.data : err);
-        });
-}
 
 // ฟังก์ชันจัดการ Webhook สำหรับ Line Bot
 function handleWebhook(req, res) {
@@ -115,7 +98,49 @@ function handleGroupMessage(replyToken, message, userId, groupId) {
         });
 }
 
+// ฟังก์ชันสำหรับจัดการ Webhook สำหรับ Dialogflow
+function handleDialogflowWebhook(req, res) {
+    const city = req.body.queryResult.parameters['location']; // ดึงชื่อเมืองจากพารามิเตอร์
+
+    // ใช้ moment-timezone ในการดึงเวลาจริงตามเมืองที่ระบุ
+    const currentTime = moment().tz(city).format('HH:mm');
+
+    let responseText = `เวลาปัจจุบันใน ${city} คือ ${currentTime}.`;
+
+    return res.json({
+        fulfillmentText: responseText,  // ส่งเวลาจริงกลับไปที่ Dialogflow
+    });
+}
+
+// ส่งข้อความตอบกลับไปที่ Line
+function replyMessage(replyToken, message) {
+    const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message/reply';
+
+    request.post({
+        url: LINE_MESSAGING_API,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.CHANNEL_ACCESS_TOKEN}` // ใส่ Access Token ของคุณ
+        },
+        body: JSON.stringify({
+            replyToken: replyToken,
+            messages: [
+                {
+                    type: 'text',
+                    text: message
+                }
+            ]
+        })
+    }, (error, response, body) => {
+        if (error) {
+            console.error('Error sending message:', error);
+        } else {
+            console.log('Message sent:', body);
+        }
+    });
+}
+
 module.exports = {
     handleWebhook,
-    sendWelcomeBroadcast // ส่งออกฟังก์ชันนี้เพื่อนำไปใช้ใน index.js
+    handleDialogflowWebhook
 };
