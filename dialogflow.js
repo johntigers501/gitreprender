@@ -2,28 +2,31 @@ const moment = require('moment-timezone');
 
 // ฟังก์ชันสำหรับจัดการ Webhook สำหรับ Dialogflow
 function handleDialogflowWebhook(req, res) {
-    // ดึงชื่อเมืองจากพารามิเตอร์ location ที่ผู้ใช้ส่งเข้ามา
-    const city = req.body.queryResult.parameters['location'];
+    const date = req.body.queryResult.parameters['date']; // ดึงค่าพารามิเตอร์ date
+    let responseText;
 
-    // ตรวจสอบและจัดการเวลา
-    let currentTime;
-    try {
-        // ใช้ moment-timezone เพื่อดึงเวลาปัจจุบันตามเมืองที่ระบุ
-        currentTime = moment().tz(city).format('HH:mm');
-    } catch (e) {
-        // หากมีข้อผิดพลาดหรือไม่พบ timezone ของเมืองนั้น
-        return res.json({
-            fulfillmentText: `ขอโทษครับ, ฉันไม่สามารถหาข้อมูลเวลาใน ${city} ได้. กรุณาตรวจสอบชื่อเมืองอีกครั้ง.`
-        });
-    }
+    // คำนวณค่า quantity ตามวันที่ที่ได้รับ
+    const nowQuantity = calculateQuantity(date); // สมมุติว่ามีฟังก์ชันคำนวณจำนวน
 
     // สร้างข้อความตอบกลับ
-    const responseText = `เวลาปัจจุบันใน ${city} คือ ${currentTime}.`;
+    if (date) {
+        responseText = `รอบของวันที่ ${date} คือ ${nowQuantity} บาท`;
+    } else {
+        responseText = "ไม่พบข้อมูลสำหรับรอบที่ระบุ";
+    }
 
     // ส่งข้อความตอบกลับไปที่ Dialogflow
     return res.json({
         fulfillmentText: responseText,
     });
+}
+
+// ฟังก์ชันคำนวณ quantity
+function calculateQuantity(date) {
+    // เพิ่ม logic ที่นี่เพื่อตรวจสอบและคำนวณจำนวนตามวัน
+    // นี่คือตัวอย่างง่ายๆ สำหรับการคำนวณ
+    const quantity = date * 10; // ตัวอย่างการคำนวณ
+    return quantity;
 }
 
 module.exports = {

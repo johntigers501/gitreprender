@@ -79,6 +79,7 @@ function handleWebhook(req, res) {
 
 // ฟังก์ชันสำหรับจัดการข้อความจากผู้ใช้
 function handleUserMessage(replyToken, message, userId) {
+    console.log(`Handling message from user: ${userId}, Message: ${message}`); // เพิ่ม log ที่นี่
     client.getProfile(userId)
         .then((profile) => {
             const userName = profile.displayName;
