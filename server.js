@@ -15,13 +15,13 @@ function sendWelcomeBroadcast() {
     };
 
     // ส่งข้อความ broadcast ไปยังผู้ใช้ทั้งหมด
-//    client.broadcast(welcomeMessage)
-//        .then(() => {
-//            console.log('Sent welcome message to all users.');
-//        })
-//        .catch((err) => {
-//            console.error('Error sending welcome broadcast:', err.response ? err.response.data : err);
-//        });
+    client.broadcast(welcomeMessage)
+        .then(() => {
+            console.log('Sent welcome message to all users.');
+        })
+        .catch((err) => {
+            console.error('Error sending welcome broadcast:', err.response ? err.response.data : err);
+        });
 }
 
 // ฟังก์ชันจัดการ Webhook สำหรับ Line Bot

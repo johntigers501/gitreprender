@@ -45,5 +45,5 @@ const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
     // เรียกใช้ฟังก์ชันส่งข้อความต้อนรับเมื่อเซิร์ฟเวอร์เริ่มต้นทำงาน
-    server.sendWelcomeBroadcast();
+//    server.sendWelcomeBroadcast();
 });
