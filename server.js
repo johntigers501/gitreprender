@@ -11,7 +11,7 @@ const client = new line.Client(config);
 function sendWelcomeBroadcast() {
     const welcomeMessage = {
         type: 'text',
-        text: 'Welcome to Line Bot.'
+        text: 'Welcome to Line Bot. by Render'
     };
 
     // ส่งข้อความ broadcast ไปยังผู้ใช้ทั้งหมด
